@@ -1,11 +1,13 @@
 ﻿using ITEJA_CustomLanguage.Lexer;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Variables.CalculateInteger
 {
-    class Expression
+    /// <summary>
+    /// Expression that splits the expression and calculates it.
+    /// </summary>
+    public class Expression
     {
         private readonly Stack<Token> tokens;
         private readonly List<Term> terms = new List<Term>();
@@ -16,7 +18,9 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Varia
             tokens = new Stack<Token>(parTokens);
             LoadTerms();
         }
-
+        /// <summary>
+        /// Loads terms for the later evaluation.
+        /// </summary>
         private void LoadTerms()
         {
             Term t = new Term();
@@ -47,6 +51,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Varia
                 terms.Add(t);
             }
         }
+        /// <summary>
+        /// Calculates the expression.
+        /// </summary>
+        /// <returns>the result of the calculation.</returns>
         public double Calculate()
         {
             Stack<double> results = new Stack<double>();

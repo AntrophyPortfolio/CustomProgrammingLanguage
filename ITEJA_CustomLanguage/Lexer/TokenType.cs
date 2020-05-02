@@ -1,5 +1,8 @@
 ﻿namespace ITEJA_CustomLanguage.Lexer
 {
+    /// <summary>
+    /// Enum containing the values for all known literals.
+    /// </summary>
     public enum TokenType
     {
         Identifier,

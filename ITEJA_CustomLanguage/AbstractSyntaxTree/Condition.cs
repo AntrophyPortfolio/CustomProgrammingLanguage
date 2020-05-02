@@ -3,12 +3,14 @@ using ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.BodyState
 using ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Variables;
 using ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Variables.CalculateInteger;
 using ITEJA_CustomLanguage.Lexer;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree
 {
+    /// <summary>
+    /// Creates a condition and evaluates it
+    /// </summary>
     public class Condition : ICondition
     {
         private Stack<Token> expressionTokens;
@@ -17,6 +19,9 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
         private double leftResult;
         private double rightResult;
 
+        /// <summary>
+        /// Parses expression that was given. Splits left and right expressions and operators too.
+        /// </summary>
         private void ParseExpression()
         {
             Stack<Token> leftSide = new Stack<Token>();
@@ -60,7 +65,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 comparisonOperator += oper.Value.ToString();
             }
         }
-
+        /// <summary>
+        /// Replaces an identifier token with a number or string token type so that it can be used for calculations.
+        /// </summary>
+        /// <param name="newToken">Token that needs to be changed.</param>
         private void ChangeTokenData(Token newToken)
         {
             IVariable existingVariable = MainClass.FindIdentifier(parent, newToken.Value.ToString());
@@ -74,7 +82,12 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             }
             newToken.Value = existingVariable.Value.ToString();
         }
-
+        /// <summary>
+        /// Evaluates the expression tokens given.
+        /// </summary>
+        /// <param name="parExpressionTokens">Stack of all tokens in expression.</param>
+        /// <param name="parParent">BodyStatement of the Parent that this statement is nested to.</param>
+        /// <returns>true or false depending on the evaluation.</returns>
         public bool IsConditionTrue(Stack<Token> parExpressionTokens, IBodyStatement parParent)
         {
             expressionTokens = new Stack<Token>(parExpressionTokens);
@@ -82,7 +95,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             ParseExpression();
             return GetResultOfCondition();
         }
-
+        /// <summary>
+        /// Gives a final result of the comparison.
+        /// </summary>
+        /// <returns>true or false depending on the expressions.</returns>
         private bool GetResultOfCondition()
         {
             return comparisonOperator switch
@@ -96,6 +112,11 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 _ => throw new InvalidDataException("Invalid operator encountered.")
             };
         }
+        /// <summary>
+        /// Checks whether it contains operator token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns>true or false</returns>
         private bool IsComparsionOperatorFound(Token token)
         {
             return token.Type == TokenType.LessThan || token.Type == TokenType.HigherThan

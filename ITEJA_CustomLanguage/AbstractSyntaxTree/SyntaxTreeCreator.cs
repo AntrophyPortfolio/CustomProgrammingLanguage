@@ -9,7 +9,11 @@ using System.Collections.Generic;
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree
 {
-    public class SyntaxTreeCreator : ISyntaxTreeCreator
+    /// <summary>
+    /// AST creates a syntax tree, parses tokens to their own
+    /// classes and fills them up with data needed
+    /// </summary>
+    public class SyntaxTreeCreator
     {
         private readonly Stack<Token> tokenStack;
         private readonly Stack<IBodyStatement> parentBodyStatements = new Stack<IBodyStatement>();
@@ -18,7 +22,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             tokenStack = new Stack<Token>(new Stack<Token>(tokens));
             CreateSyntaxTree();
         }
-        private MainClass CreateSyntaxTree()
+        /// <summary>
+        /// Parses tokens from the tokenStack according to the tokentype
+        /// </summary>
+        private void CreateSyntaxTree()
         {
             while (tokenStack.Count != 0)
             {
@@ -66,9 +73,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                     CreateForCycleStatement();
                 }
             }
-            return null;
         }
-
+        /// <summary>
+        /// Creates ForCycle Statement
+        /// </summary>
         private void CreateForCycleStatement()
         {
             IForCycleStatement forCycle = new ForCycleStatement();
@@ -77,7 +85,12 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             parentBodyStatements.Peek().Statements.Add(forCycle);
             parentBodyStatements.Push(forCycle);
         }
-
+        /// <summary>
+        /// Retrieves condition for the forcycle to end
+        /// which is inner counter, max allowed counter and 
+        /// if it is decremental or incremental loop.
+        /// </summary>
+        /// <param name="forCycle">Loop that will be given parameters.</param>
         private void FillConditionParametersCycle(IForCycleStatement forCycle)
         {
             CheckAndRemoveLeftParenthesis();
@@ -88,7 +101,11 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             FindMaxCounterValue(forCycle);
             FindIncrementOrDecrement(forCycle);
         }
-
+        /// <summary>
+        /// Retrieves wheter the loop is incremental or decremental
+        /// according to whether it's variable++ or variable--.
+        /// </summary>
+        /// <param name="forCycle">Loop that will be given parameters.</param>
         private void FindIncrementOrDecrement(IForCycleStatement forCycle)
         {
             Token newToken;
@@ -109,7 +126,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             }
             throw new ArgumentException("Invalid increment or decrement of value, make sure forcycle syntax is correct.");
         }
-
+        /// <summary>
+        /// Retrieves maximum allowed of loops.
+        /// </summary>
+        /// <param name="forCycle">Loop that will be given the parameters.</param>
         private void FindMaxCounterValue(IForCycleStatement forCycle)
         {
             Token newToken;
@@ -122,7 +142,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             maxCounter.Calculate();
             forCycle.MaximumAllowedCounter = maxCounter;
         }
-
+        /// <summary>
+        /// Retrieves comparison operators from the condtion in the loop.
+        /// </summary>
+        /// <param name="forCycle">Loop that will be given the parameters.</param>
         private void FindComparisonOperators(IForCycleStatement forCycle)
         {
             Token newToken;
@@ -135,7 +158,11 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 tokenStack.Pop();
             }
         }
-
+        /// <summary>
+        /// Retrieves inner counter value that will be incremented
+        /// after each loop
+        /// </summary>
+        /// <param name="forCycle">Loop that will be given the parameters.</param>
         private void FindInnerCounterValue(IForCycleStatement forCycle)
         {
             IIntegerVariable innerCounter = new IntegerVariable();
@@ -152,7 +179,9 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             forCycle.InnerCounterVariable = innerCounter;
             forCycle.LocalVariables.Add(innerCounter);
         }
-
+        /// <summary>
+        /// Removes the needed "integer" before the variable declaration.
+        /// </summary>
         private void CheckAndRemoveDataTypeInForCycle()
         {
             if (tokenStack.Peek().Type != TokenType.IntegerDataType)
@@ -161,18 +190,30 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             }
             tokenStack.Pop();
         }
-
+        /// <summary>
+        /// Checks whether the TokenType is comparison operator.
+        /// </summary>
+        /// <param name="newToken">Token that will be checked.</param>
+        /// <returns>true or false depending on the type.</returns>
         private bool IsComparisonOperator(Token newToken)
         {
             return newToken.Type == TokenType.LessThan || newToken.Type == TokenType.HigherThan
                 || newToken.Type == TokenType.Equals || newToken.Type == TokenType.ExclMark;
         }
-
+        /// <summary>
+        /// Checks whether a body statement reached an end by looking
+        /// for '}' token type
+        /// </summary>
+        /// <param name="newToken">Token that will be checked.</param>
+        /// <returns>true or false dpeending on the type.</returns>
         private bool IsEndOfBodyStatement(Token newToken)
         {
             return newToken.Type == TokenType.RightBracket;
         }
-
+        /// <summary>
+        /// Creates else statement taht will be connected
+        /// to the initial if statement
+        /// </summary>
         private void CreateElseStatement()
         {
             IConditionIfStatement elseCondition = new ConditionIfStatement();
@@ -181,7 +222,13 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             elseCondition.Parent = parentBodyStatements.Peek();
             parentBodyStatements.Push(elseCondition);
         }
-
+        /// <summary>
+        /// Checks whether the last insterted body statement was condition,
+        /// whether the current token type is RightBracket and if the next one 
+        /// is Else TokenType
+        /// </summary>
+        /// <param name="newToken">Token that will be checked.</param>
+        /// <returns>true or false depending on type.</returns>
         private bool IsElseStatementFound(Token newToken)
         {
             if (parentBodyStatements.Peek() is IConditionIfStatement)
@@ -197,6 +244,9 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             }
             return false;
         }
+        /// <summary>
+        /// Creates a method call statement.
+        /// </summary>
         private void CreateRunMethodStatement()
         {
             IRunStatement runStatement = new RunStatement();
@@ -212,7 +262,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             CreateInputParameters(runStatement);
             parentBodyStatements.Peek().Statements.Add(runStatement);
         }
-
+        /// <summary>
+        /// Retrieves all input parameters for the future method call.
+        /// </summary>
+        /// <param name="runStatement">Run statement that will be given the parameters.</param>
         private void CreateInputParameters(IRunStatement runStatement)
         {
             Token newToken;
@@ -241,7 +294,9 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 }
             }
         }
-
+        /// <summary>
+        /// Creates a condition statement.
+        /// </summary>
         private void CreateConditionStatement()
         {
             IConditionIfStatement conditionStatement = new ConditionIfStatement();
@@ -250,7 +305,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             parentBodyStatements.Peek().Statements.Add(conditionStatement);
             parentBodyStatements.Push(conditionStatement);
         }
-
+        /// <summary>
+        /// Creates a stack of all tokens that are in the expression and later evaluates
+        /// </summary>
+        /// <param name="condition">Condition that will be given the parameters.</param>
         private void CreateConditionTokens(IConditionIfStatement condition)
         {
             CheckAndRemoveLeftParenthesis();
@@ -260,7 +318,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 condition.ExpressionTokens.Push(newToken);
             }
         }
-
+        /// <summary>
+        /// Checks whether the following token is of type left parenthesis,
+        /// if so, it will delete it from the stack, if not, the exception is thrown
+        /// </summary>
         private void CheckAndRemoveLeftParenthesis()
         {
             if (tokenStack.Peek().Type == TokenType.LeftParenthesis)
@@ -272,7 +333,9 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 throw new ArgumentException("Left parenthesis is missing");
             }
         }
-
+        /// <summary>
+        /// Creates a print line statement.
+        /// </summary>
         private void CreatePrintStatement()
         {
             CheckAndRemoveLeftParenthesis();
@@ -294,7 +357,11 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             }
             parentBodyStatements.Peek().Statements.Add(printStatement);
         }
-
+        /// <summary>
+        /// Creates a redefinition statement.
+        /// </summary>
+        /// <param name="newToken">Token that will be used for finding
+        /// the target variable.</param>
         private void CreateRedefinitionStatement(Token newToken)
         {
             IRedefinitionStatement redefStatement = new RedefinitionStatement
@@ -306,7 +373,12 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             RedefinitionReadTokens(redefStatement);
             parentBodyStatements.Peek().Statements.Add(redefStatement);
         }
-
+        /// <summary>
+        /// Retrieves the expresion that should be used for creating a new value
+        /// for variable.
+        /// </summary>
+        /// <param name="redefStatement">Redefinition statement that will be
+        /// given the parameters.</param>
         private void RedefinitionReadTokens(IRedefinitionStatement redefStatement)
         {
             Token expressionToken;
@@ -315,7 +387,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 redefStatement.TokensExpression.Push(expressionToken);
             }
         }
-
+        /// <summary>
+        /// Creates a method and adds them to the MainClass list of all methods.
+        /// </summary>
+        /// <param name="newToken">Token that will be used to create method.</param>
         private void CreateMethod(Token newToken)
         {
             IMethod newMethod = new Method();
@@ -325,7 +400,11 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
             parentBodyStatements.Push(newMethod);
             MainClass.Methods.Add(newMethod);
         }
-
+        /// <summary>
+        /// Retrieves the method parameters that will be used for calling this method.
+        /// Also puts them to the local variable list.
+        /// </summary>
+        /// <param name="newMethod">Method that will be given the parameters.</param>
         private void CreateMethodParameters(IMethod newMethod)
         {
             Token newToken;
@@ -345,12 +424,20 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 }
             }
         }
-
+        /// <summary>
+        /// Checks whether the method was found, basically if the token 
+        /// is identifier and next one is left parenthesis
+        /// </summary>
+        /// <param name="token">The token that will be checked.</param>
+        /// <returns>true or false depending on the type of token.</returns>
         private bool IsMethodFound(Token token)
         {
             return (token.Type == TokenType.Identifier || token.Type == TokenType.Program) && tokenStack.Peek().Type == TokenType.LeftParenthesis;
         }
-
+        /// <summary>
+        /// Creates a string variable
+        /// </summary>
+        /// <returns>The string variable created.</returns>
         private IStringVariable CreateStringVariable()
         {
             IStringVariable stringVariable = new StringVariable();
@@ -362,7 +449,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
 
             return stringVariable;
         }
-
+        /// <summary>
+        /// Creates an integer variable.
+        /// </summary>
+        /// <returns>The integer variable created.</returns>
         private IIntegerVariable CreateIntegerVariable()
         {
             IIntegerVariable integerVariable = new IntegerVariable();
@@ -374,7 +464,12 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
 
             return integerVariable;
         }
-
+        /// <summary>
+        /// Determines whether the variable should be in the global namespace
+        /// or local namespace. If there is no parent as bodystatement, it is global
+        /// </summary>
+        /// <param name="variable">Variable that will be put into
+        /// the list of variables.</param>
         private void DetermineGlobalOrLocalVariable(IVariable variable)
         {
             if (parentBodyStatements.Count == 0)
@@ -386,7 +481,11 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 parentBodyStatements.Peek().LocalVariables.Add(variable);
             }
         }
-
+        /// <summary>
+        /// Retrieves the definition of a variable so that
+        /// it can be later used to recreate the final value.
+        /// </summary>
+        /// <param name="variable">Variable that will be given the definition.</param>
         private void CreateVariableDefinition(IVariable variable)
         {
             CheckAndRemoveEqualsSign();
@@ -411,7 +510,10 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree
                 intVariable.Calculate();
             }
         }
-
+        /// <summary>
+        /// Checks whether an equals sign is
+        /// present and removes it from the stack.
+        /// </summary>
         private void CheckAndRemoveEqualsSign()
         {
             if (tokenStack.Peek().Type == TokenType.Equals)

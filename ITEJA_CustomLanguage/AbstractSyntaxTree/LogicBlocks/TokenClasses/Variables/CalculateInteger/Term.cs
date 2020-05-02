@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Variables.CalculateInteger
 {
-    class Term
+    /// <summary>
+    /// Term that has multiple factors and appends them with operators.
+    /// </summary>
+    public class Term
     {
         public Stack<Factor> Factors = new Stack<Factor>();
         public List<string> Operators = new List<string>();
 
+        /// <summary>
+        /// Calculates the factors between eachother.
+        /// </summary>
+        /// <returns>The result of the two terms.</returns>
         public double Calculate()
         {
             double result;

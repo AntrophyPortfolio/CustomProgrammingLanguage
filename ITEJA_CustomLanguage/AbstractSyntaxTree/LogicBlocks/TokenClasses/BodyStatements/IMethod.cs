@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.BodyStatements
 {
+    /// <summary>
+    /// Interface for methods that are being used in a program.
+    /// </summary>
     public interface IMethod : IBodyStatement
     {
         /// <summary>

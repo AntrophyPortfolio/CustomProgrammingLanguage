@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.BodyStatements
 {
+    /// <summary>
+    /// A statement that can have multiple other statements in itself.
+    /// </summary>
     public interface IBodyStatement : IStatement
     {
         /// <summary>

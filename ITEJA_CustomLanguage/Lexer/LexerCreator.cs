@@ -5,8 +5,14 @@ using System.Linq;
 
 namespace ITEJA_CustomLanguage.Lexer
 {
+    /// <summary>
+    /// Analyzes source code and makes tokens out of all keywords
+    /// </summary>
     public class LexerCreator : ILexerCreator
     {
+        /// <summary>
+        /// Dictionary with all keywords of the programming language V++
+        /// </summary>
         private static readonly IDictionary<string, TokenType> keyWords = new Dictionary<string, TokenType>
         {
             {"integer", TokenType.IntegerDataType},
@@ -18,6 +24,10 @@ namespace ITEJA_CustomLanguage.Lexer
             {"program", TokenType.Program},
             {"println", TokenType.PrintLn}
         };
+        /// <summary>
+        /// Dictionary with all operators and punctators 
+        /// that will be used throught the program.
+        /// </summary>
         private static readonly IDictionary<char, TokenType> operatorsAndPunctators = new Dictionary<char, TokenType>
         {
             {'+', TokenType.Plus},
@@ -42,7 +52,10 @@ namespace ITEJA_CustomLanguage.Lexer
             reader = new StringReader(sourceCode);
             FindTokens();
         }
-
+        /// <summary>
+        /// Returns an enumerable collection containing all lexems.
+        /// </summary>
+        /// <returns>Enumerable collection of lexems.</returns>
         public IEnumerable<string> GetFoundLexems()
         {
             if (tokensList.Count == 0)
@@ -51,6 +64,10 @@ namespace ITEJA_CustomLanguage.Lexer
             }
             return tokensList.Select(x => x.Value);
         }
+        /// <summary>
+        /// Returns an enumerable collection containing all tokens.
+        /// </summary>
+        /// <returns>Enumerable collection of tokens.</returns>
         public IEnumerable<Token> GetFoundTokens()
         {
             if (tokensList.Count == 0)
@@ -59,6 +76,9 @@ namespace ITEJA_CustomLanguage.Lexer
             }
             return tokensList;
         }
+        /// <summary>
+        /// Creates tokens from the source code
+        /// </summary>
         private void FindTokens()
         {
             char character;
@@ -82,7 +102,10 @@ namespace ITEJA_CustomLanguage.Lexer
                 }
             }
         }
-
+        /// <summary>
+        /// Creates a string token.
+        /// </summary>
+        /// <param name="character">Initial character.</param>
         private void CreateStringToken(char character)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -92,7 +115,10 @@ namespace ITEJA_CustomLanguage.Lexer
             }
             AddToken(TokenType.StringCharacters, stringBuilder.ToString());
         }
-
+        /// <summary>
+        /// Creates an integer token.
+        /// </summary>
+        /// <param name="character">Initial character</param>
         private void CreateIntegerToken(char character)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -104,7 +130,10 @@ namespace ITEJA_CustomLanguage.Lexer
             }
             AddToken(TokenType.NumberCharacters, stringBuilder.ToString());
         }
-
+        /// <summary>
+        /// Checks whether the character is for a variable or if it's a keyword.
+        /// </summary>
+        /// <param name="character">Initial character</param>
         private void CheckCharacterMeaning(char character)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -124,11 +153,19 @@ namespace ITEJA_CustomLanguage.Lexer
                 AddToken(TokenType.Identifier, stringBuilder.ToString());
             }
         }
-
+        /// <summary>
+        /// Creates an operator or punctator token.
+        /// </summary>
+        /// <param name="character">Initial character</param>
         private void CreateOperatorAndPunctatorToken(char character)
         {
             AddToken(operatorsAndPunctators[character], character.ToString());
         }
+        /// <summary>
+        /// Adds a token to the stack.
+        /// </summary>
+        /// <param name="type">Type of the token.</param>
+        /// <param name="value">Value of the token.</param>
         private void AddToken(TokenType type, string value)
         {
             tokensList.Add(new Token()

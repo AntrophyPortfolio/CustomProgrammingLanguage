@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Variables.CalculateInteger
+﻿namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses.Variables.CalculateInteger
 {
-    class Factor
+    /// <summary>
+    /// Single numeric value
+    /// </summary>
+    public class Factor
     {
         public double Value { get; }
         public Factor(double pValue)

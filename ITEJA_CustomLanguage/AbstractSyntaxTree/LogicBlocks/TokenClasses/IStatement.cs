@@ -2,6 +2,10 @@
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks.TokenClasses
 {
+    /// <summary>
+    /// Main Statement that is being 
+    /// used in all of the classes
+    /// </summary>
     public interface IStatement
     {
         /// <summary>

@@ -24,11 +24,14 @@ namespace ITEJA_CustomLanguage
             //PrintLexems(lexer);
             //PrintTokens(lexer);
 
-            ISyntaxTreeCreator ast = new SyntaxTreeCreator(lexer.GetFoundTokens());
+            SyntaxTreeCreator ast = new SyntaxTreeCreator(lexer.GetFoundTokens());
 
             MainClass.Run();
         }
-
+        /// <summary>
+        /// Prints Lexems to the console.
+        /// </summary>
+        /// <param name="lexer">Source lexer</param>
         static void PrintLexems(ILexerCreator lexer)
         {
             foreach (var item in lexer.GetFoundLexems())
@@ -36,6 +39,10 @@ namespace ITEJA_CustomLanguage
                 Console.WriteLine(item);
             }
         }
+        /// <summary>
+        /// Prints Tokens to the console
+        /// </summary>
+        /// <param name="lexer">Source lexer</param>
         static void PrintTokens(ILexerCreator lexer)
         {
             foreach (var item in lexer.GetFoundTokens())

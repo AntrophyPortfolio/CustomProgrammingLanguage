@@ -7,11 +7,23 @@ using System.Linq;
 
 namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks
 {
+    /// <summary>
+    /// The main program of this application, interpret
+    /// </summary>
     public class MainClass
     {
+        /// <summary>
+        /// Contains all global variables that were not part of any method.
+        /// </summary>
         public static IList<IVariable> GlobalVariables = new List<IVariable>();
+        /// <summary>
+        /// Contains all methods of the class.
+        /// </summary>
         public static IList<IMethod> Methods = new List<IMethod>();
 
+        /// <summary>
+        /// The interpret, runs all statements according to their position and executes them.
+        /// </summary>
         public static void Run()
         {
             foreach (var method in Methods)
@@ -25,6 +37,12 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks
             throw new ArgumentException("The main method could not be found!");
         }
 
+        /// <summary>
+        /// Find variable that corresponds to the token value
+        /// </summary>
+        /// <param name="parent">BodyStatement parent that the statement is nested in.</param>
+        /// <param name="identifierName">Value of the token</param>
+        /// <returns></returns>
         public static IVariable FindIdentifier(IBodyStatement parent, string identifierName)
         {
             IVariable localVariable = FindInLocalVariables(parent, identifierName);
@@ -44,6 +62,12 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks
             }
         }
 
+        /// <summary>
+        /// Replaces all identifiers in a given stack
+        /// </summary>
+        /// <param name="tokens">Stack of tokens that has identifiers</param>
+        /// <param name="parent">BodyStatement parent that the statement is nested in.</param>
+        /// <returns></returns>
         public static Stack<Token> ReplaceIdentifiersInExpression(Stack<Token> tokens, IBodyStatement parent)
         {
             Stack<Token> tokensExpressionWithoutIdents = new Stack<Token>();
@@ -77,11 +101,22 @@ namespace ITEJA_CustomLanguage.AbstractSyntaxTree.LogicBlocks
             }
             return new Stack<Token>(tokensExpressionWithoutIdents);
         }
+        /// <summary>
+        /// Linq call to find name of variable in global variables
+        /// </summary>
+        /// <param name="identifierName">Value of the token</param>
+        /// <returns>Returns variable or null if nothing was found.</returns>
         private static IVariable FindInGlobalVariables(string identifierName)
         {
             return GlobalVariables.Select(variable => variable).Where(variable => variable.Name.Equals(identifierName)).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Find 
+        /// </summary>
+        /// <param name="parent">BodyStatement parent that the statement is nested in.</param>
+        /// <param name="identifierName">Value of the token</param>
+        /// <returns>Returns variable or null if nothing was found.</returns>
         private static IVariable FindInLocalVariables(IBodyStatement parent, string identifierName)
         {
             while (parent != null)
