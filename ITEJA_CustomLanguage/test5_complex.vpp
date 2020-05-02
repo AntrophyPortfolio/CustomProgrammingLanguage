@@ -1,0 +1,66 @@
+integer myVariableFive;
+string appendedString = "test of appending" + " string and continue" + " later";
+integer counter = 0;
+
+recursiveMethod(integer firstIntegerParameter, string secondStringParameter)
+{
+	println(secondStringParameter);
+	println(firstIntegerParameter);
+	counter = counter + 1;
+	if(counter <= 3)
+	{
+		run recursiveMethod(counter, "Counter value:");
+	}
+}
+program()
+{
+	myVariableFive = 5;
+	forcycle(integer i = 0, i < 2, i++)
+	{
+		forcycle(integer j = 0, j < 2, j++)
+			{
+				forcycle(integer z = 0, z < 2, z++)
+				{
+					println("Third nested loop!");
+				}
+				println("Second nested loop!");
+			}
+		println("First loop!");
+	}
+	if(counter + 2 < 4)
+	{
+		println("Yahoo, condition is true!");
+	}
+	else
+	{
+		println("Ouch, condition is false");
+	}
+	if(6 > 5)
+	{
+		println("6 is indeed higher than 5!");
+		if(6 > 4)
+		{
+			println("And also, 6 is higher than 4, NESTED CONDITION!");
+		
+			forcycle(integer i = 0, i < 3, i++)
+			{
+				println("You got through 2 conditions, congratulations!");
+			}
+		}
+	}
+	println(appendedString);
+	println("Test of order operations, 5 + 5 * 8 - 6 is:");
+	println(5 + 5 * 8 - 6);
+	run recursiveMethod(50, "Hello from recursive method!");
+	run PrintMyFriends("John", "Mona", "Lisa", "Denver", "Detroit");
+}
+
+PrintMyFriends(string p1, string p2, string p3, string p4, string p5)
+{
+	println("My friends are:");
+	println(p1);
+	println(p2);
+	println(p3);
+	println(p4);
+	println(p5);
+}
